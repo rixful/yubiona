@@ -1,1 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>フル配信はこちら</title>
+  <meta name="theme-color" content="#000000">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      overflow: hidden; 
+      background: #000; 
+      height: 100vh; 
+    }
 
+    video { 
+      width: 100%; 
+      height: 110vh; 
+      object-fit: cover;
+      transform: translateY(-5%);
+    }
+
+    .sound-btn {
+      position: absolute;
+      bottom: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 9999px;
+      padding: 14px 36px;
+      font-size: 19px;
+      font-weight: bold;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      z-index: 30;
+    }
+  </style>
+</head>
+<body>
+
+  <video id="myVideo" autoplay muted playsinline loop>
+    <!-- 動画差し替え済み + キャッシュ対策 -->
+    <source src="https://files.catbox.moe/sz2ax7.mp4?v=2" type="video/mp4">
+  </video>
+
+  <button id="soundBtn" class="sound-btn flex items-center gap-2">
+    🔊 音声ON
+  </button>
+
+  <div id="overlay" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:50;">
+    <div class="bg-white/10 backdrop-blur-md rounded-3xl px-8 py-10 text-center max-w-[320px] w-full mx-4 border border-white/30">
+      <p class="text-white text-xl font-bold mb-1">フル配信はこちら</p>
+      <p id="randomText" class="text-white/70 text-sm mb-8">(そらで検索 🔎)</p>
+      <div id="countdown" class="text-white text-lg font-medium mb-8">6秒後に移動</div>
+      <button onclick="goToAffiliate()" class="w-full bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-xl py-5 rounded-3xl shadow-lg">今すぐ見る</button>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById('myVideo');
+    const soundBtn = document.getElementById('soundBtn');
+    const overlay = document.getElementById('overlay');
+    const countdownEl = document.getElementById('countdown');
+    const randomText = document.getElementById('randomText');
+
+    const AFFILIATE_URL = "https://twimg.you/s/zep8w1yz";
+
+    const names = ["そら","あんな","みう","ゆう","れな","さくら","ひなた","あかり","りん","なな"];
+    function setRandomName() {
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      randomText.innerHTML = `(${randomName}で検索 🔎)`;
+    }
+
+    let isMuted = true;
+    soundBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      video.muted = isMuted;
+      soundBtn.innerHTML = isMuted ? `🔊 音声ON` : `🔇 音声OFF`;
+    });
+
+    setTimeout(() => {
+      setRandomName();
+      overlay.style.display = 'flex';
+      startCountdown();
+    }, 7000);
+
+    let timeLeft = 6;
+    function startCountdown() {
+      const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = `${timeLeft}秒後に移動`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          window.location.href = AFFILIATE_URL;
+        }
+      }, 1000);
+    }
+
+    window.goToAffiliate = () => window.location.href = AFFILIATE_URL;
+  </script>
+</body>
+</html>
